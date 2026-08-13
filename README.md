@@ -757,22 +757,16 @@ AWS-Cloud/
 ├── AI-ML/
 │   ├── SageMaker/
 │   ├── Bedrock/
-│   ├── Rekognition/
-│   ├── Comprehend/
-│   └── Textract/
-│
+│   ├── Q developer/
 ├── Security/
 │   ├── IAM/
 │   ├── KMS/
-│   ├── WAF/
-│   ├── GuardDuty/
 │   ├── Security-Hub/
 │   └── Secrets-Manager/
 │
 └── Monitoring/
     ├── CloudWatch/
     ├── CloudTrail/
-    ├── X-Ray/
     ├── Prometheus/
     └── Grafana/
 ```
