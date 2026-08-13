@@ -42,10 +42,10 @@ For each major AWS domain, I aim to document:
         │                   │                   │
      COMPUTE             STORAGE            NETWORKING
         │                   │                   │
-   EC2, Lambda          S3, EBS, EFS       VPC, Route 53
-   ECS, EKS             Glacier            ELB, CloudFront
-   Fargate              Storage Gateway    NAT, VPN
-   Beanstalk                                Direct Connect
+   EC2, Lambda           S3, EFS         VPC, Route 53
+   ECS, EKS                RDS           ELB, CloudFront
+   Fargate               Dynamodb          NAT, VPN
+   Beanstalk               EBS                
         │                   │                   │
         └───────────────────┼───────────────────┘
                             │
@@ -55,10 +55,10 @@ For each major AWS domain, I aim to document:
               │             │             │
           CodePipeline      IAM         CloudWatch
           CodeBuild         KMS         CloudTrail
-          CodeDeploy        WAF         Config
-          CodeCommit        Secrets     X-Ray
-          CloudFormation    GuardDuty
-          Systems Manager   Security Hub
+          CodeDeploy        WAF         Cost explorer
+          CodeCommit        Secrets    
+          CloudFormation    Security Hub
+          Systems Manager  
               │             │             │
               └─────────────┼─────────────┘
                             │
@@ -66,7 +66,7 @@ For each major AWS domain, I aim to document:
                             │
                  ┌──────────┼──────────┐
                  │          │          │
-               SageMaker  Bedrock   Rekognition
+               SageMaker  Bedrock    Q Developer
                Comprehend  Textract  Transcribe
 ```
 
