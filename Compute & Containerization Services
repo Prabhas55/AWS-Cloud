@@ -1,0 +1,564 @@
+# AWS Compute & Containerization Services
+
+A practical guide to understanding and choosing AWS compute and containerization services:
+
+* Amazon EC2
+* AWS Lambda
+* AWS Fargate
+* AWS Elastic Beanstalk
+* Amazon ECS
+* Amazon EKS
+* Amazon ECR
+
+The goal of this repository is to understand **what each service does, when to use it, and how these services fit together in a modern AWS architecture.**
+
+---
+
+## ☁️ AWS Compute Landscape
+
+AWS provides multiple ways to run applications, ranging from fully managed serverless services to complete infrastructure control.
+
+```text
+                    AWS COMPUTE
+                         │
+          ┌──────────────┼──────────────┐
+          │              │              │
+       Servers       Serverless      Containers
+          │              │              │
+        EC2           Lambda       ┌──────┴──────┐
+                                   │             │
+                                  ECS           EKS
+                                   │             │
+                                Fargate       Fargate/EC2
+```
+
+---
+
+# 1. Amazon EC2
+
+**Amazon Elastic Compute Cloud (EC2)** provides resizable virtual servers in AWS.
+
+### Key characteristics
+
+* Full control over the operating system
+* Choose CPU, memory, storage and networking
+* Supports Linux and Windows
+* Supports Auto Scaling
+* Integrates with Elastic Load Balancing
+* Can run Docker and Kubernetes workloads
+* Pay for the compute capacity you provision
+
+### Use cases
+
+* Traditional web applications
+* Legacy applications
+* Custom software environments
+* High-control workloads
+* Databases and specialized applications
+* Applications requiring specific OS configurations
+
+### Example
+
+```text
+Internet
+   │
+   ▼
+Load Balancer
+   │
+   ▼
+Auto Scaling Group
+   │
+ ┌─┴─────────┐
+ ▼           ▼
+EC2         EC2
+Instance    Instance
+```
+
+### Think of EC2 as:
+
+> "I want a virtual server and I want control over it."
+
+---
+
+# 2. AWS Lambda
+
+AWS Lambda is a **serverless, event-driven compute service**.
+
+You upload your code and AWS manages the underlying infrastructure.
+
+### Key characteristics
+
+* No server management
+* Event-driven
+* Automatic scaling
+* Pay based on usage
+* Supports multiple programming languages
+* Integrates with many AWS services
+
+### Common triggers
+
+```text
+API Gateway
+     │
+     ▼
+   Lambda
+     │
+ ┌───┼────┐
+ ▼   ▼    ▼
+S3  SQS  DynamoDB
+```
+
+### Use cases
+
+* REST APIs
+* File processing
+* Automation
+* Scheduled tasks
+* Event processing
+* Backend functions
+
+### Think of Lambda as:
+
+> "Run my code when something happens, without managing servers."
+
+---
+
+# 3. AWS Fargate
+
+AWS Fargate is a **serverless compute engine for containers**.
+
+Instead of managing EC2 instances for your containers, AWS manages the underlying compute infrastructure.
+
+Fargate works with:
+
+* Amazon ECS
+* Amazon EKS
+
+### Architecture
+
+```text
+Docker Image
+     │
+     ▼
+    ECR
+     │
+     ▼
+ECS / EKS
+     │
+     ▼
+  Fargate
+     │
+     ▼
+Running Container
+```
+
+### Benefits
+
+* No EC2 server management
+* Automatic infrastructure management
+* Container-based deployment
+* Resource-based pricing
+* Works well with microservices
+
+### Think of Fargate as:
+
+> "I want containers, but I don't want to manage the servers running them."
+
+---
+
+# 4. AWS Elastic Beanstalk
+
+Elastic Beanstalk is a **managed application deployment service**.
+
+You provide your application code, and Beanstalk handles much of the infrastructure setup.
+
+It can provision and manage resources such as:
+
+* EC2
+* Load Balancer
+* Auto Scaling
+* Security Groups
+* CloudWatch integration
+
+### Typical architecture
+
+```text
+Developer
+    │
+    ▼
+Application Code
+    │
+    ▼
+Elastic Beanstalk
+    │
+ ┌──┼──────────┐
+ ▼  ▼          ▼
+EC2 ALB   Auto Scaling
+```
+
+### Use cases
+
+* Quickly deploying web applications
+* Developers who don't want to configure infrastructure manually
+* Simple production applications
+* Rapid application environments
+
+### Think of Elastic Beanstalk as:
+
+> "I have application code and want AWS to handle much of the infrastructure setup."
+
+---
+
+# 5. Amazon ECS
+
+Amazon Elastic Container Service is an AWS-native **container orchestration service**.
+
+ECS can run containers using:
+
+* EC2
+* Fargate
+
+### Architecture
+
+```text
+              ECS Cluster
+                   │
+          ┌────────┴────────┐
+          │                 │
+       Service           Service
+          │                 │
+     ┌────┴────┐       ┌────┴────┐
+     ▼         ▼       ▼         ▼
+ Container Container Container Container
+```
+
+### ECS with EC2
+
+You manage the underlying EC2 instances.
+
+```text
+ECS
+ │
+ ▼
+EC2 Instances
+ │
+ ▼
+Containers
+```
+
+### ECS with Fargate
+
+AWS manages the underlying compute infrastructure.
+
+```text
+ECS
+ │
+ ▼
+Fargate
+ │
+ ▼
+Containers
+```
+
+### Use cases
+
+* Microservices
+* Docker workloads
+* APIs
+* Web applications
+* Batch processing
+
+### Think of ECS as:
+
+> "I want AWS-native container orchestration."
+
+---
+
+# 6. Amazon EKS
+
+Amazon Elastic Kubernetes Service is AWS's **managed Kubernetes service**.
+
+EKS manages the Kubernetes control plane while you choose how to run your worker workloads.
+
+### Architecture
+
+```text
+                 EKS
+                  │
+          Kubernetes Control Plane
+                  │
+        ┌─────────┴─────────┐
+        │                   │
+      EC2                Fargate
+        │                   │
+        ▼                   ▼
+     Pods                  Pods
+```
+
+### Key features
+
+* Managed Kubernetes control plane
+* Kubernetes API compatibility
+* High availability
+* Integration with AWS networking and security
+* Supports Kubernetes ecosystem tools
+* Can run workloads on EC2 or Fargate
+
+### Use cases
+
+* Kubernetes-based applications
+* Complex microservices
+* Multi-cloud Kubernetes strategies
+* Organizations already using Kubernetes
+* Advanced container orchestration
+
+### Think of EKS as:
+
+> "I need Kubernetes on AWS."
+
+---
+
+# 7. Amazon ECR
+
+Amazon Elastic Container Registry is a **managed container image registry**.
+
+It stores Docker/OCI container images.
+
+### Workflow
+
+```text
+Developer
+    │
+    ▼
+Docker Build
+    │
+    ▼
+Docker Image
+    │
+    ▼
+   ECR
+    │
+    ├──────────────┐
+    ▼              ▼
+   ECS            EKS
+    │              │
+    ▼              ▼
+Container        Pod
+```
+
+### Common commands
+
+```bash
+# Authenticate Docker with ECR
+aws ecr get-login-password --region <region> | \
+docker login --username AWS --password-stdin <account>.dkr.ecr.<region>.amazonaws.com
+
+# Build image
+docker build -t my-app .
+
+# Tag image
+docker tag my-app:latest <repository-url>:latest
+
+# Push image
+docker push <repository-url>:latest
+```
+
+### Use cases
+
+* Store Docker images
+* CI/CD pipelines
+* ECS deployments
+* EKS deployments
+* Image version management
+
+### Think of ECR as:
+
+> "A private AWS registry for my container images."
+
+---
+
+# ⚖️ Service Comparison
+
+| Service           | Type                    | Server Management     | Containers    | Best For                           |
+| ----------------- | ----------------------- | --------------------- | ------------- | ---------------------------------- |
+| EC2               | Virtual Machine         | High                  | Optional      | Maximum control                    |
+| Lambda            | Serverless              | None                  | No            | Event-driven applications          |
+| Fargate           | Serverless Containers   | None                  | Yes           | Running containers without servers |
+| Elastic Beanstalk | PaaS                    | Low                   | Optional      | Simple application deployment      |
+| ECS               | Container Orchestration | Depends               | Yes           | AWS-native containers              |
+| EKS               | Kubernetes              | Control plane managed | Yes           | Kubernetes workloads               |
+| ECR               | Container Registry      | None                  | Stores images | Container image storage            |
+
+---
+
+# 🧠 How to Choose?
+
+### Need complete server control?
+
+➡️ **EC2**
+
+### Need event-driven serverless compute?
+
+➡️ **Lambda**
+
+### Need containers without managing servers?
+
+➡️ **Fargate**
+
+### Want simple application deployment?
+
+➡️ **Elastic Beanstalk**
+
+### Want AWS-native container orchestration?
+
+➡️ **ECS**
+
+### Need Kubernetes?
+
+➡️ **EKS**
+
+### Need a private container registry?
+
+➡️ **ECR**
+
+---
+
+# 🚀 Real-World DevOps Architecture
+
+A common containerized application deployment can look like this:
+
+```text
+Developer
+    │
+    ▼
+   Git
+    │
+    ▼
+CI/CD Pipeline
+    │
+    ▼
+Docker Build
+    │
+    ▼
+   ECR
+    │
+    ▼
+ECS / EKS
+    │
+    ▼
+Fargate / EC2
+    │
+    ▼
+Application
+    │
+    ▼
+Load Balancer
+    │
+    ▼
+     Users
+```
+
+Supporting services can include:
+
+```text
+CloudWatch  → Monitoring & Logs
+IAM         → Authentication & Authorization
+VPC         → Networking
+ALB         → Traffic Distribution
+Auto Scaling → Scaling
+Secrets Manager → Secrets
+CloudFormation/Terraform → Infrastructure as Code
+```
+
+---
+
+# 🔥 Interview Questions
+
+### EC2
+
+**Q: What is EC2?**
+
+EC2 provides resizable virtual compute capacity in AWS.
+
+**Q: EC2 vs Lambda?**
+
+EC2 provides persistent virtual servers with more control, while Lambda provides serverless, event-driven execution.
+
+---
+
+### ECS
+
+**Q: What is ECS?**
+
+ECS is AWS's managed container orchestration service.
+
+**Q: ECS vs EKS?**
+
+ECS is AWS-native orchestration, while EKS provides managed Kubernetes.
+
+---
+
+### Fargate
+
+**Q: What is Fargate?**
+
+Fargate is a serverless compute engine for containers.
+
+**Q: ECS vs Fargate?**
+
+ECS is the orchestration service. Fargate is one compute option used to run ECS tasks.
+
+---
+
+### ECR
+
+**Q: What is ECR?**
+
+ECR is a managed container registry used to store and manage container images.
+
+**Q: Does ECR run containers?**
+
+No. ECR stores container images. ECS/EKS can deploy those images, and Fargate or EC2 can provide compute.
+
+---
+
+# 🎯 Key Takeaways
+
+The most important distinction is:
+
+```text
+EC2       → Virtual Machines
+Lambda    → Serverless Functions
+Fargate   → Serverless Containers
+Beanstalk → Managed Application Deployment
+ECS       → AWS Container Orchestration
+EKS       → Kubernetes Orchestration
+ECR       → Container Image Registry
+```
+
+Understanding these differences is important when designing **secure, scalable, cost-efficient AWS architectures**.
+
+---
+
+## 📚 Recommended Learning Path
+
+1. Learn EC2 fundamentals
+2. Understand VPC and networking
+3. Learn Docker
+4. Learn ECR
+5. Deploy containers using ECS
+6. Understand Fargate
+7. Learn Lambda and serverless architecture
+8. Learn Elastic Beanstalk
+9. Learn Kubernetes fundamentals
+10. Deploy Kubernetes workloads using EKS
+11. Build a CI/CD pipeline
+12. Add Terraform or CloudFormation
+13. Add monitoring with CloudWatch
+14. Implement IAM and security best practices
+
+---
+
+## 🛠️ Skills Covered
+
+`AWS` `EC2` `Lambda` `Fargate` `ECS` `EKS` `ECR` `Docker` `Kubernetes` `DevOps` `CI/CD` `Cloud Computing` `Containerization` `Infrastructure as Code`
