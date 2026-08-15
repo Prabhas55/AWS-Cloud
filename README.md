@@ -38,16 +38,19 @@ For each major AWS domain, I aim to document:
 ``` text
                          AWS CLOUD
                             │
-        ┌───────────────────┼───────────────────┐
-        │                   │                   │
-     COMPUTE             STORAGE            NETWORKING
-        │                   │                   │
-   EC2, Lambda           S3, EFS         VPC, Route 53
-   ECS, EKS                RDS           ELB, CloudFront
-   Fargate               Dynamodb          NAT, VPN
-   Beanstalk               EBS                
-        │                   │                   │
-        └───────────────────┼───────────────────┘
+        ┌───────────────────┼───────────────────────────────┐
+        │                   │                               │
+     COMPUTE             STORAGE & DATABASES            NETWORKING
+        │                   │                               │
+   EC2, Lambda           S3, EFS, EBS                   VPC, Route 53
+   ECS, EKS                RDS                         ELB, CloudFront
+   Fargate               Dynamodb                        NAT, VPN
+   Beanstalk               Aurora
+                           DynamoDB
+                        ElastiCache
+                          Redshift 
+        │                   │                             │
+        └───────────────────┼─────────────────────────────┘
                             │
               ┌─────────────┼─────────────┐
               │             │             │
